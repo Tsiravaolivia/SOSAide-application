@@ -1,0 +1,246 @@
+ SOS HELP — Emergency Assistance Platform
+
+SOSAide is an intelligent and assistance platform accessible through a mobile application that allows users to trigger an emergency alert, locate a person in need, contact emergency contacts, find nearby emergency centers, guide the person and their helpers, and provide routes — all in demo mode for the Impact Forge prototype.
+
+«⚠️ DEMO MODE: No real calls are made to actual emergency services. Calls, SMS messages, and emergency centers are simulated or use test numbers.»
+
+---
+
+ Features
+
+ SOS
+
+- Clickable SOS button to trigger an emergency.
+- Automatic location detection (GPS) displayed immediately on the map.
+- 10-second countdown with a cancellation button.
+- Emergency history: active ✅ / cancelled 🛑, including times and routes.
+
+ Emergency Contacts
+
+- Fields to add personal emergency contacts (name, phone number, relationship).
+- One-click calling ("tel:") and SMS ("sms:").
+- Automatic emergency SMS with a location link when an SOS is triggered.
+
+ Emergency Centers
+
+- Pre-integrated emergency numbers stored in the database.
+- Nearby centers displayed according to the type of emergency (medical, assault, fire, accident, lost).
+- Sorting by distance, map display, and Call button.
+- Each center is accompanied by a route (🚗 car, 🚶 walking, 🚌 bus when available).
+
+ Artificial Intelligence
+
+- Analysis of emergency situations described by the user.
+- Identification of the emergency type and recommendations.
+- Provides appropriate emergency centers, routes, and available assistance.
+
+ Helpers
+
+- Receive the SOS alert.
+- Access the shared location.
+- Get a route to reach the person in need.
+
+ Platform Flow
+
+- Automatic calls to emergency centers (simulated in demo mode).
+- SMS messages received from other platform users (demo flow).
+
+---
+
+ Technologies
+
+Layer| Technology
+Backend| Node.js, Express
+Database| MySQL ("sos_platform")
+Frontend| HTML, CSS, JavaScript (Vanilla)
+Map| Leaflet + OpenStreetMap
+Routing| OSRM + Google Maps (links)
+Target| Android smartphones (PWA / mobile-first)
+
+---
+
+ Project Structure
+
+AideSOS/
+├── README.md
+├── .env # Configuration (ports, MySQL)
+├── package.json
+├── db.js # MySQL connection + tables + demo data
+├── server.js # Express API (GET / POST / DELETE)
+└── public/
+    ├── index.html # User interface
+    ├── app.js # Frontend logic (SOS, map, contacts...)
+    └── style.css # Mobile-first styles
+
+---
+
+ Requirements
+
+- Node.js ≥ 18
+- MySQL (XAMPP / WAMP / MySQL Server)
+- A modern web browser (Chrome recommended)
+
+---
+
+ Installation
+
+1. Clone or copy the project
+
+Clone the repository or copy the project into a folder, for example "AideSOS".
+
+2. Install dependencies
+
+npm install
+
+3. Configure ".env"
+
+PORT=3000
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your_password
+DB_NAME=sos_platform
+
+4. Start the server
+
+node server.js
+
+5. Open the application
+
+http://localhost:3000
+
+«The database and tables are created automatically if they do not already exist. Existing tables are never modified.»
+
+---
+
+ API — HTTP Methods
+
+Method| Route| Description
+GET| "/api/test"| Checks the server and database
+GET| "/api/contacts/:userId"| Displays a user's emergency contacts
+POST| "/api/contacts"| Adds an emergency contact
+DELETE| "/api/contacts/:id"| Deletes a contact
+GET| "/api/centers"| Emergency centers (type + distance filter)
+GET| "/api/helpers"| Nearby helpers (demo)
+POST| "/api/alerts"| Creates an SOS alert
+GET| "/api/alerts"| Emergency history (ACTIVE / CANCELLED)
+POST| "/api/alerts/:id/cancel"| Cancels an SOS
+POST| "/api/ai/analyze"| Analyzes an emergency description using AI
+
+Examples
+
+Add an emergency contact — POST
+
+{
+  "user_id": 1,
+  "nom": "Mom",
+  "telephone": "0320000000",
+  "relation": "Mother"
+}
+
+Create an SOS — POST
+
+{
+  "user_id": 1,
+  "type": "MEDICAL",
+  "description": "I feel unwell",
+  "latitude": -18.8792,
+  "longitude": 47.5079
+}
+
+Find emergency centers according to the emergency type — GET
+
+/api/centers?lat=-18.8792&lng=47.5079&type=MEDICAL
+
+---
+
+ Database — "sos_platform"
+
+Table| Purpose
+"users"| Users (ID 1 = demo user)
+"emergency_contacts"| Personal emergency contacts
+"emergency_centers"| Integrated emergency centers
+"alerts"| Triggered SOS alerts
+"alert_cancellations"| Cancelled SOS alerts
+
+Check the database in MySQL Workbench
+
+USE sos_platform;
+
+SELECT * FROM emergency_contacts; -- Added contacts
+SELECT * FROM alerts; -- Triggered SOS alerts
+SELECT * FROM alert_cancellations; -- Cancelled SOS alerts
+
+
+
+ Demo Scenario
+
+1. Add 2–3 emergency contacts.
+2. Click the 🚨 SOS button.
+3. Select an emergency type or describe the situation and click 🤖 Analyze with AI.
+4. The user's location appears on the map.
+5. A 10-second countdown starts, with an option to cancel.
+6. If the SOS is triggered:
+   - Automatic calls are simulated.
+   - Emergency SMS messages are sent.
+   - SMS messages from other users are displayed in the demo flow.
+   - Emergency centers matching the emergency type are displayed with routes.
+   - Helpers can access the shared location and routes.
+7. The history stores the emergency times, statuses, and routes.
+
+
+ Test on an Android Phone
+
+1. Start the server on your PC.
+2. Find your PC's IP address:
+
+ipconfig
+
+3. Connect the phone and PC to the same Wi-Fi network.
+4. On the phone, open:
+
+http://YOUR_PC_IP:3000
+
+5. For GPS access over HTTP, use ngrok:
+
+ngrok http 3000
+
+This provides an HTTPS URL that can be opened on the phone.
+
+
+
+ Troubleshooting
+
+Problem| Solution
+"Cannot find module ... server.js"| Check for a typo and use "node server.js"
+"port: 3000" / "EADDRINUSE"| Run "taskkill /F /IM node.exe" and restart, or use another port
+"MODULE_NOT_FOUND"| Make sure "server.js" is in the project root and run "npm install"
+"Access denied for user 'root'"| Check "DB_PASSWORD" in ".env"
+"ECONNREFUSED" MySQL| Start the MySQL service
+Blank page / "Cannot GET /"| Make sure "index.html" is inside "public/"
+
+---
+
+ Next Steps — V2
+
+- [ ] Create a real Android APK using Capacitor.
+- [ ] Add a separate Helpers page with real-time communication using Socket.io.
+- [ ] Add a "I'm lost" mode with destination search.
+- [ ] Add SMS / USSD support for feature phones (Twilio / Africa's Talking).
+- [ ] Connect the "location_history", "location_shares", and "ai_emergency_*" tables.
+- [ ] Establish real connections with emergency services through official authorization and partnerships.
+
+
+
+ Legal Notice
+
+This project is a demonstration prototype. It does not replace official emergency numbers or services.
+
+Any real connection to emergency services will require the necessary authorizations, agreements, and partnerships with the relevant organizations.
+
+
+
+ Impact Forge
+
+SOS HELP was developed as a prototype for Impact Forge.
+
+«Making emergency assistance faster, simpler, and more accessible.»
