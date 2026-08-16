@@ -228,7 +228,8 @@ Blank page / "Cannot GET /"| Make sure "index.html" is inside "public/"
 - [ ] Add SMS / USSD support for feature phones (Twilio / Africa's Talking).
 - [ ] Connect the "location_history", "location_shares", and "ai_emergency_*" tables.
 - [ ] Establish real connections with emergency services through official authorization and partnerships.
-
+-[ ] To add AI-powered voice input
+-[ ] Plan to expand SOSAide beyond of Masagascar,with the goal eventually covering the entire island.
 
 
  Legal Notice
