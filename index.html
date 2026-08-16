@@ -1,0 +1,138 @@
+//
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOSAide — Démo</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- BARRE DU HAUT -->
+<header class="topbar">
+  <div class="logo">🚨 SOS<span>Aide</span></div>
+  
+</header>
+
+<!-- ✅ MENU DE NAVIGATION -->
+<nav class="menu">
+  <a href="#accueil" class="active">Accueil</a>
+  <a href="#carte">Localisation</a>
+  <a href="#centres"> Centres</a>
+  <a href="#aidants"> Aidants</a>
+  <a href="#contacts"> Contacts</a>
+  <a href="#historique"> Historique</a>
+</nav>
+
+<main class="wrap">
+
+  <!-- ACCUEIL / BOUTON SOS -->
+  <section id="accueil" class="hero">
+    <button id="sosButton" class="sos-btn" type="button">
+      <span class="big">🚨</span>
+      <span class="txt">SOS</span>
+      <small>Appuyer pour demander de l'aide</small>
+    </button>
+    <p id="locationStatus" class="status">📍 Position non récupérée.</p>
+  </section>
+
+  <!-- COMPTE A REBOURS -->
+  <section id="countdownBox" class="panel hidden">
+    <h2>⏳ Envoi du SOS dans...</h2>
+    <div id="countdownValue" class="count">10</div>
+    <button id="cancelCountdown" class="btn black" type="button">🛑 ANNULER LE SOS</button>
+  </section>
+
+  <!-- PANNEAU SOS ACTIF -->
+  <section id="activePanel" class="panel hidden">
+    <h2>🚨 SOS ACTIF</h2>
+
+    <h3>📞 Appels automatiques des centres</h3>
+    <div id="callLog" class="log"></div>
+
+    <h3>📨 SMS envoyés</h3>
+    <div id="smsLog" class="log"></div>
+
+    <h3>📥 SMS reçus des autres utilisateurs</h3>
+    <div id="incomingSms" class="log"></div>
+
+    <button id="shareBtn" class="btn blue" type="button">📍 Copier ma position</button>
+    <button id="cancelActive" class="btn black" type="button">🛑 ANNULER L'URGENCE</button>
+  </section>
+
+  <!-- CARTE -->
+  <section id="carte" class="panel">
+    <h2>🗺️ Carte</h2>
+    <div id="map"></div>
+  </section>
+
+  <!-- CENTRES -->
+  <section id="centres" class="panel">
+    <h2>🏥 Centres d'urgence proches (selon l'urgence)</h2>
+    <div id="centersList" class="cards"></div>
+  </section>
+
+  <!-- AIDANTS -->
+  <section id="aidants" class="panel">
+    <h2>🤝 Personnes venant en aide br(itinéraire vers vous)</h2>
+    <div id="helpersList" class="cards"></div>
+  </section>
+
+  <!-- CONTACTS -->
+  <section id="contacts" class="panel">
+    <h2>👥 Mes contacts d'urgence</h2>
+    <form id="contactForm" class="grid3">
+      <input id="cName" type="text" placeholder="Nom (ex : Maman)" required>
+      <input id="cPhone" type="tel" placeholder="Téléphone (ex : +261...)" required>
+      <input id="cRel" type="text" placeholder="Relation (mère, ami...)">
+      <button class="btn red" type="submit">Ajouter</button>
+    </form>
+    <div id="contactList" class="cards"></div>
+  </section>
+
+  <!-- HISTORIQUE -->
+  <section id="historique" class="panel">
+    <h2>📋 Historique des urgences</h2>
+    <div id="historyList" class="cards"></div>
+  </section>
+
+</main>
+
+<!-- MODAL TYPE D'URGENCE -->
+<div id="typeModal" class="modal hidden">
+  <div class="modal-box">
+    <button id="closeModal" class="x" type="button">×</button>
+    <h2>Quelle est votre urgence ?</h2>
+
+    <div class="types">
+      <button class="type-btn" data-type="ACCIDENT" type="button">🚗 Accident</button>
+      <button class="type-btn" data-type="MEDICALE" type="button">🚑 Médicale</button>
+      <button class="type-btn" data-type="AGRESSION" type="button">🚔 Agression</button>
+      <button class="type-btn" data-type="INCENDIE" type="button">🔥 Incendie</button>
+      <button class="type-btn" data-type="PERDU" type="button">🧭 Perdu</button>
+      <button class="type-btn" data-type="AUTRE" type="button">⚠️ Autre</button>
+    </div>
+
+    <div class="ai-box">
+      <textarea id="aiText" rows="3" placeholder="Décrivez votre problème (l'IA analyse)..."></textarea>
+      <button id="aiBtn" class="btn blue" type="button">🤖 Analyser avec l'IA</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="app.js"></script>
+
+<script>
+  document.querySelectorAll(".menu a").forEach(a => {
+    a.addEventListener("click", () => {
+      document.querySelectorAll(".menu a").forEach(x => x.classList.remove("active"));
+      a.classList.add("active");
+    });
+  });
+</script>
+
+</body>
+</html>
